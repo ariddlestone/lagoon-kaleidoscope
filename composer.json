@@ -1,0 +1,9 @@
+{
+    "name": "ariddlestone/lagoon-kaleidoscope",
+    "description": "Tool to solve Lagoon's Kaleidoscope puzzle",
+    "autoload": {
+        "psr-4": {
+            "ARiddlestone\\LagoonKaleidoscope\\": "src/"
+        }
+    }
+}
