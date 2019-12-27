@@ -27,9 +27,11 @@ class Game
                   15,
     ];
 
+    protected $testCount = 0;
+
     public function __construct()
     {
-        foreach(require './tiles.php' as $tileConfig) {
+        foreach (require './tiles.php' as $tileConfig) {
             $this->tiles[] = new Tile($tileConfig);
         }
     }
@@ -38,24 +40,31 @@ class Game
     {
         /** @var int $n Where are we in the sequence? */
         $n = 0;
-        while(array_key_exists($n, $this->order) && array_key_exists($this->order[$n], $this->board)) {
+        while (array_key_exists($n, $this->order) && array_key_exists($this->order[$n], $this->board)) {
             $n++;
         }
-        if(!array_key_exists($n, $this->order)) {
+        if (! array_key_exists($n, $this->order)) {
             return true;
         }
 
         /** @var int $p Which board position are we filling? */
         $p = $this->order[$n];
 
-        foreach($this->tiles as $tile) {
-            if(in_array($tile, $this->board)) {
-                continue;
-            }
+        foreach (
+            array_filter(
+                $this->tiles,
+                function (Tile $t) {
+                    return ! in_array($t, $this->board);
+                }
+            ) as $tile
+        ) {
             $this->board[$p] = $tile;
             for ($r = 0; $r < 4; $r++) {
-                if($this->test() && $this->solve()) {
-                    return true;
+                if($this->test()) {
+                    echo sprintf("[%s]\n", implode(', ', $this->board));
+                    if($this->solve()) {
+                        return true;
+                    }
                 }
                 $tile->rotateCW();
             }
@@ -65,8 +74,17 @@ class Game
         return false;
     }
 
+    /**
+     * @return Tile[]
+     */
+    public function getBoard()
+    {
+        return $this->board;
+    }
+
     protected function test()
     {
+        $this->testCount++;
         for ($x = 0; $x < 4; $x++) {
             for ($y = 0; $y < 4; $y++) {
                 $p = $x + 4 * $y;
@@ -78,8 +96,10 @@ class Game
                 if ($y > 0) {
                     $p2 = $p - 4;
                     if (
-                        !empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_NORTH) !== $this->board[$p2]->getPattern(Tile::ROTATION_SOUTH)
+                        ! empty($this->board[$p2])
+                        && $this->board[$p]->getPattern(Tile::ROTATION_NORTH) !== $this->board[$p2]->getPattern(
+                            Tile::ROTATION_SOUTH
+                        )
                     ) {
                         return false;
                     }
@@ -89,8 +109,10 @@ class Game
                 if ($x < 3) {
                     $p2 = $p + 1;
                     if (
-                        !empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_EAST) !== $this->board[$p2]->getPattern(Tile::ROTATION_WEST)
+                        ! empty($this->board[$p2])
+                        && $this->board[$p]->getPattern(Tile::ROTATION_EAST) !== $this->board[$p2]->getPattern(
+                            Tile::ROTATION_WEST
+                        )
                     ) {
                         return false;
                     }
@@ -100,8 +122,10 @@ class Game
                 if ($y < 3) {
                     $p2 = $p + 4;
                     if (
-                        !empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_SOUTH) !== $this->board[$p2]->getPattern(Tile::ROTATION_NORTH)
+                        ! empty($this->board[$p2])
+                        && $this->board[$p]->getPattern(Tile::ROTATION_SOUTH) !== $this->board[$p2]->getPattern(
+                            Tile::ROTATION_NORTH
+                        )
                     ) {
                         return false;
                     }
@@ -111,8 +135,10 @@ class Game
                 if ($x > 0) {
                     $p2 = $p - 1;
                     if (
-                        !empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_WEST) !== $this->board[$p2]->getPattern(Tile::ROTATION_EAST)
+                        ! empty($this->board[$p2])
+                        && $this->board[$p]->getPattern(Tile::ROTATION_WEST) !== $this->board[$p2]->getPattern(
+                            Tile::ROTATION_EAST
+                        )
                     ) {
                         return false;
                     }
@@ -120,5 +146,13 @@ class Game
             }
         }
         return true;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTestCount()
+    {
+        return $this->testCount;
     }
 }

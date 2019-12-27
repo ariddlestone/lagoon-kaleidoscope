@@ -18,6 +18,14 @@ class Tile
         $this->patterns = $tileConfig;
     }
 
+    /**
+     * @return int
+     */
+    public function getRotation()
+    {
+        return $this->rotation;
+    }
+
     public function rotateCW()
     {
         $this->rotation += 1;
@@ -35,5 +43,13 @@ class Tile
         $side += $this->rotation;
         $side %= 4;
         return $this->patterns[$side];
+    }
+
+    public function __toString()
+    {
+        return $this->getPattern(0)
+            . $this->getPattern(1)
+            . $this->getPattern(2)
+            . $this->getPattern(3);
     }
 }
