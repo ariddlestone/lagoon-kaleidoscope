@@ -5,9 +5,9 @@ namespace ARiddlestone\LagoonKaleidoscope;
 class Tile
 {
     const ROTATION_NORTH = 0;
-    const ROTATION_WEST = 1;
+    const ROTATION_EAST = 1;
     const ROTATION_SOUTH = 2;
-    const ROTATION_EAST = 3;
+    const ROTATION_WEST = 3;
 
     protected $patterns;
 
@@ -40,16 +40,16 @@ class Tile
 
     public function getPattern($side)
     {
-        $side += $this->rotation;
+        $side += 4 - $this->rotation;
         $side %= 4;
         return $this->patterns[$side];
     }
 
     public function __toString()
     {
-        return $this->getPattern(0)
-            . $this->getPattern(1)
-            . $this->getPattern(2)
-            . $this->getPattern(3);
+        return $this->getPattern(self::ROTATION_NORTH)
+            . $this->getPattern(self::ROTATION_EAST)
+            . $this->getPattern(self::ROTATION_SOUTH)
+            . $this->getPattern(self::ROTATION_WEST);
     }
 }
