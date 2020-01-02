@@ -75,25 +75,9 @@ class Game
                     continue;
                 }
 
-                // north border
-                if ($y > 0) {
-                    $p2 = $p - 4;
-                    if (
-                        ! empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_NORTH) !== $this->board[$p2]->getPattern(
-                            Tile::ROTATION_SOUTH
-                        )
-                    ) {
-                        return false;
-                    }
-                }
-
                 // east border
-                if ($x < 3) {
-                    $p2 = $p + 1;
-                    if (
-                        ! empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_EAST) !== $this->board[$p2]->getPattern(
+                if ($x < 3 && !empty($this->board[$p2 = $p + 1])) {
+                    if ($this->board[$p]->getPattern(Tile::ROTATION_EAST) !== $this->board[$p2]->getPattern(
                             Tile::ROTATION_WEST
                         )
                     ) {
@@ -102,25 +86,9 @@ class Game
                 }
 
                 // south border
-                if ($y < 3) {
-                    $p2 = $p + 4;
-                    if (
-                        ! empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_SOUTH) !== $this->board[$p2]->getPattern(
+                if ($y < 3 && !empty($this->board[$p2 = $p + 4])) {
+                    if ($this->board[$p]->getPattern(Tile::ROTATION_SOUTH) !== $this->board[$p2]->getPattern(
                             Tile::ROTATION_NORTH
-                        )
-                    ) {
-                        return false;
-                    }
-                }
-
-                // west border
-                if ($x > 0) {
-                    $p2 = $p - 1;
-                    if (
-                        ! empty($this->board[$p2])
-                        && $this->board[$p]->getPattern(Tile::ROTATION_WEST) !== $this->board[$p2]->getPattern(
-                            Tile::ROTATION_EAST
                         )
                     ) {
                         return false;
