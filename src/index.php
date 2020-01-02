@@ -2,8 +2,7 @@
 
 namespace ARiddlestone\LagoonKaleidoscope;
 
-require_once './Tile.php';
-require_once './Game.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $game = new Game();
 $start = time();
