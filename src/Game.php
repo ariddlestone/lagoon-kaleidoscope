@@ -14,19 +14,6 @@ class Game
      */
     protected $board = [];
 
-    /**
-     * @var int[]
-     */
-    protected $order = [
-        0,
-        1, 4,
-        2, 5, 8,
-        3, 6, 9,  12,
-           7, 10, 13,
-              11, 14,
-                  15,
-    ];
-
     protected $testCount = 0;
 
     public function __construct()
@@ -39,30 +26,25 @@ class Game
     public function solve()
     {
         /** @var int $n Where are we in the sequence? */
-        $n = 0;
-        while (array_key_exists($n, $this->order) && array_key_exists($this->order[$n], $this->board)) {
-            $n++;
-        }
-        if (! array_key_exists($n, $this->order)) {
+        $p = count($this->board);
+
+        if($p >= count($this->tiles)) {
             return true;
         }
-
-        /** @var int $p Which board position are we filling? */
-        $p = $this->order[$n];
 
         foreach (
             array_filter(
                 $this->tiles,
                 function (Tile $t) {
-                    return ! in_array($t, $this->board);
+                    return !in_array($t, $this->board);
                 }
             ) as $tile
         ) {
             $this->board[$p] = $tile;
             for ($r = 0; $r < 4; $r++) {
-                if($this->test()) {
+                if ($this->test()) {
                     echo sprintf("[%s]\n", implode(', ', $this->board));
-                    if($this->solve()) {
+                    if ($this->solve()) {
                         return true;
                     }
                 }
@@ -88,6 +70,7 @@ class Game
         for ($x = 0; $x < 4; $x++) {
             for ($y = 0; $y < 4; $y++) {
                 $p = $x + 4 * $y;
+
                 if (empty($this->board[$p])) {
                     continue;
                 }
